@@ -1,0 +1,52 @@
+
+version: "3"
+
+services:
+  ms-discovery-service:
+    container_name: c-discovery-service
+    image: arshdeepsingh070/discovery-service-discovery:1
+    ports:
+      - 8761:8761
+
+  api-gateway:
+    container_name: c-second-service
+    image: arshdeepsingh070/product-service:2
+    ports:
+      - 9999:9999
+
+    links:
+      - ms-discovery-service:ms-discovery-service
+    environment:
+      - discovery_service_url=http://ms-discovery-service:8761/eureka
+      -
+  product-service:
+    container_name: c-second-service
+    image: arshdeepsingh070/product-service:1
+    ports:
+      - 8051:8051
+
+    links:
+      - ms-discovery-service:ms-discovery-service
+    environment:
+      - discovery_service_url=http://ms-discovery-service:8761/eureka
+
+  user-service:
+    container_name: c-second-service
+    image: arshdeepsingh070/user-service:1
+    ports:
+      - 8053:8053
+
+    links:
+      - msdiscovery-service:ms-discovery-service
+    environment:
+      - discovery_service_url=http://ms-discovery-service:8761/eureka
+  order-service:
+    container_name: c-second-service
+    image: arshdeepsingh070/order-service:1
+    ports:
+      - 8050:8050
+
+    links:
+      - ms-discovery-service:ms-discovery-service
+    environment:
+      - discovery_service_url=http://ms-discovery-service:8761/eureka
